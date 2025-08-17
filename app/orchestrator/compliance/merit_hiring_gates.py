@@ -1,0 +1,1023 @@
+"""
+Merit Hiring Compliance Gates
+
+Human-in-the-loop compliance system for the Fed Job Advisor platform.
+Implements strict Merit Hiring compliance gates with logging and audit trails.
+
+Key Compliance Areas:
+- Essay content generation prevention
+- 200-word limit enforcement
+- No-AI attestation verification  
+- STAR method validation without content creation
+- Protected file modification warnings
+- Fields=Full parameter verification for USAJobs API
+- Budget constraint validation ($0 external development)
+"""
+
+import logging
+import json
+from typing import Dict, Any, List, Optional, Tuple, Union, Callable
+from datetime import datetime
+from enum import Enum
+from dataclasses import dataclass, asdict
+import asyncio
+import re
+from langgraph.graph import END, interrupt
+
+logger = logging.getLogger(__name__)
+
+
+class ComplianceLevel(Enum):
+    """Levels of compliance violations"""
+    CRITICAL = "critical"      # Must stop execution immediately
+    HIGH = "high"             # Requires human review before proceeding
+    MEDIUM = "medium"         # Warning but can proceed with logging
+    LOW = "low"              # Information only
+
+
+class ViolationType(Enum):
+    """Types of compliance violations"""
+    ESSAY_CONTENT_GENERATION = "essay_content_generation"
+    WORD_LIMIT_VIOLATION = "word_limit_violation"
+    AI_ATTESTATION_VIOLATION = "ai_attestation_violation"
+    PROTECTED_FILE_ACCESS = "protected_file_access"
+    BUDGET_CONSTRAINT_VIOLATION = "budget_constraint_violation"
+    USAJOBS_API_MISUSE = "usajobs_api_misuse"
+    UNAUTHORIZED_DATA_ACCESS = "unauthorized_data_access"
+    MERIT_HIRING_VIOLATION = "merit_hiring_violation"
+
+
+@dataclass
+class ComplianceViolation:
+    """Data structure for compliance violations"""
+    violation_type: ViolationType
+    level: ComplianceLevel
+    message: str
+    context: Dict[str, Any]
+    timestamp: datetime
+    session_id: Optional[str] = None
+    user_id: Optional[str] = None
+    agent_name: Optional[str] = None
+    action_blocked: bool = False
+    human_review_required: bool = False
+
+
+@dataclass
+class ComplianceCheckResult:
+    """Result of a compliance check with streaming support"""
+    passed: bool
+    violations: List[ComplianceViolation]
+    warnings: List[str]
+    action_allowed: bool
+    human_review_required: bool
+    dynamic_interrupt_triggered: bool
+    streaming_events: List[Dict[str, Any]]
+    audit_log_entry: Dict[str, Any]
+
+
+class MeritHiringGates:
+    """
+    Enhanced Merit Hiring compliance gate system with dynamic interrupts and streaming
+    
+    Provides human-in-the-loop compliance checking for all sensitive operations
+    in the Fed Job Advisor system with real-time pattern detection and interrupts.
+    """
+    
+    def __init__(self, enable_streaming: bool = True, enable_dynamic_interrupts: bool = True):
+        """Initialize the enhanced compliance gate system"""
+        self.audit_log: List[Dict[str, Any]] = []
+        self.violation_patterns = self._initialize_violation_patterns()
+        self.streaming_enabled = enable_streaming
+        self.dynamic_interrupts_enabled = enable_dynamic_interrupts
+        self.streaming_events: List[Dict[str, Any]] = []
+        self.real_time_monitors: List[Callable] = []
+        self._setup_real_time_monitoring()
+        logger.info(f"Merit Hiring compliance gates initialized (streaming={enable_streaming}, interrupts={enable_dynamic_interrupts})")
+    
+    def _initialize_violation_patterns(self) -> Dict[ViolationType, List[str]]:
+        """Initialize patterns that detect compliance violations"""
+        
+        return {
+            ViolationType.ESSAY_CONTENT_GENERATION: [
+                "here is your essay",
+                "here's your essay", 
+                "i wrote",
+                "draft essay",
+                "example essay",
+                "sample narrative",
+                "here is a narrative",
+                "completed essay",
+                "finished narrative",
+                "essay content:",
+                "narrative response:",
+                # Enhanced patterns for better detection
+                r"situation:\s*[a-z]",  # STAR method content creation
+                r"task:\s*[a-z]",
+                r"action:\s*[a-z]", 
+                r"result:\s*[a-z]",
+                "let me write",
+                "i'll compose",
+                "here's what you should write",
+                "copy this narrative",
+                "use this essay"
+            ],
+            
+            ViolationType.WORD_LIMIT_VIOLATION: [
+                "ignore the 200 word limit",
+                "exceed 200 words",
+                "more than 200 words is fine",
+                "don't worry about word count",
+                "word limit doesn't matter"
+            ],
+            
+            ViolationType.AI_ATTESTATION_VIOLATION: [
+                "ai helped write this",
+                "generated by ai",
+                "ai-assisted writing",
+                "chatgpt wrote",
+                "claude wrote",
+                "ai generated content"
+            ],
+            
+            ViolationType.PROTECTED_FILE_ACCESS: [
+                "modify resume",
+                "edit application",
+                "change personal information",
+                "update application materials",
+                "write to protected"
+            ],
+            
+            ViolationType.USAJOBS_API_MISUSE: [
+                "fields=all",
+                "scrape all data",
+                "download entire database",
+                "bulk data extraction",
+                "mass job collection",
+                # Enhanced API misuse patterns
+                r"fields=(full|complete|\*)",
+                "unlimited requests",
+                "bypass rate limits",
+                "scrape continuously",
+                "extract all jobs"
+            ]
+        }
+    
+    def _setup_real_time_monitoring(self):
+        """Set up real-time content monitoring for streaming compliance"""
+        
+        if not self.streaming_enabled:
+            return
+        
+        # Real-time monitors that can trigger dynamic interrupts
+        self.real_time_monitors = [
+            self._monitor_essay_content_generation,
+            self._monitor_word_limit_violations,
+            self._monitor_ai_attestation_issues,
+            self._monitor_protected_content_access
+        ]
+        
+        logger.info(f"Set up {len(self.real_time_monitors)} real-time compliance monitors")
+    
+    def _add_streaming_event(self, event_type: str, event_data: Dict[str, Any]):
+        """Add a streaming compliance event"""
+        
+        if not self.streaming_enabled:
+            return
+        
+        event = {
+            "event_type": event_type,
+            "timestamp": datetime.utcnow().isoformat(),
+            "data": event_data,
+            "source": "merit_hiring_gates"
+        }
+        
+        self.streaming_events.append(event)
+        
+        # Log critical events immediately
+        if event_type in ["critical_violation_detected", "dynamic_interrupt_triggered", "human_review_required"]:
+            logger.critical(f"COMPLIANCE ALERT: {event_type} - {event_data}")
+    
+    def _monitor_essay_content_generation(self, text: str) -> Optional[ComplianceViolation]:
+        """Real-time monitor for essay content generation"""
+        
+        text_lower = text.lower()
+        
+        # Advanced pattern matching with regex
+        advanced_patterns = [
+            (r"(situation|task|action|result):\s*[a-z]", "STAR method content creation detected"),
+            (r"here (is|'s) (your|an?) (essay|narrative)", "Direct content generation detected"),
+            (r"(copy|use) this (essay|narrative|response)", "Content sharing violation detected"),
+            (r"i (wrote|composed|created|drafted)", "AI authorship admission detected")
+        ]
+        
+        for pattern, message in advanced_patterns:
+            if re.search(pattern, text_lower):
+                return ComplianceViolation(
+                    violation_type=ViolationType.ESSAY_CONTENT_GENERATION,
+                    level=ComplianceLevel.CRITICAL,
+                    message=message,
+                    context={"pattern": pattern, "matched_text": text[:200]},
+                    timestamp=datetime.utcnow(),
+                    action_blocked=True,
+                    human_review_required=True
+                )
+        
+        return None
+    
+    def _monitor_word_limit_violations(self, text: str) -> Optional[ComplianceViolation]:
+        """Real-time monitor for word limit violations"""
+        
+        text_lower = text.lower()
+        violation_patterns = [
+            "ignore the 200 word limit",
+            "don't worry about word count",
+            "exceed 200 words",
+            "more than 200 words is fine"
+        ]
+        
+        for pattern in violation_patterns:
+            if pattern in text_lower:
+                return ComplianceViolation(
+                    violation_type=ViolationType.WORD_LIMIT_VIOLATION,
+                    level=ComplianceLevel.HIGH,
+                    message=f"Word limit violation guidance: {pattern}",
+                    context={"pattern": pattern},
+                    timestamp=datetime.utcnow(),
+                    action_blocked=True,
+                    human_review_required=True
+                )
+        
+        return None
+    
+    def _monitor_ai_attestation_issues(self, text: str) -> Optional[ComplianceViolation]:
+        """Real-time monitor for AI attestation violations"""
+        
+        text_lower = text.lower()
+        
+        # Check for AI acknowledgment in content
+        ai_patterns = [
+            "ai helped write",
+            "generated by ai", 
+            "ai-assisted",
+            "chatgpt",
+            "claude wrote",
+            "ai generated"
+        ]
+        
+        for pattern in ai_patterns:
+            if pattern in text_lower:
+                return ComplianceViolation(
+                    violation_type=ViolationType.AI_ATTESTATION_VIOLATION,
+                    level=ComplianceLevel.CRITICAL,
+                    message=f"AI attestation violation: {pattern}",
+                    context={"pattern": pattern},
+                    timestamp=datetime.utcnow(),
+                    action_blocked=True,
+                    human_review_required=True
+                )
+        
+        return None
+    
+    def _monitor_protected_content_access(self, text: str) -> Optional[ComplianceViolation]:
+        """Real-time monitor for protected content access"""
+        
+        text_lower = text.lower()
+        
+        protected_actions = [
+            "modify your resume",
+            "edit your application", 
+            "change personal information",
+            "update application materials"
+        ]
+        
+        for action in protected_actions:
+            if action in text_lower:
+                return ComplianceViolation(
+                    violation_type=ViolationType.PROTECTED_FILE_ACCESS,
+                    level=ComplianceLevel.HIGH,
+                    message=f"Protected content modification attempted: {action}",
+                    context={"action": action},
+                    timestamp=datetime.utcnow(),
+                    action_blocked=True,
+                    human_review_required=True
+                )
+        
+        return None
+    
+    async def real_time_compliance_check(
+        self,
+        content: str,
+        context: Optional[Dict[str, Any]] = None
+    ) -> ComplianceCheckResult:
+        """Real-time compliance check with dynamic interrupts"""
+        
+        self._add_streaming_event("real_time_check_started", {
+            "content_length": len(content),
+            "context_provided": context is not None
+        })
+        
+        violations = []
+        streaming_events = []
+        dynamic_interrupt_triggered = False
+        
+        # Run all real-time monitors
+        for monitor in self.real_time_monitors:
+            try:
+                violation = monitor(content)
+                if violation:
+                    violations.append(violation)
+                    
+                    # Trigger dynamic interrupt for critical violations
+                    if violation.level == ComplianceLevel.CRITICAL and self.dynamic_interrupts_enabled:
+                        dynamic_interrupt_triggered = True
+                        self._add_streaming_event("dynamic_interrupt_triggered", {
+                            "violation_type": violation.violation_type.value,
+                            "message": violation.message,
+                            "action_blocked": True
+                        })
+                        
+                        # In LangGraph, this would trigger an interrupt
+                        logger.critical(f"DYNAMIC INTERRUPT: {violation.message}")
+                        
+            except Exception as e:
+                logger.error(f"Real-time monitor failed: {e}")
+        
+        # Create streaming events for violations
+        for violation in violations:
+            streaming_events.append({
+                "event_type": "violation_detected",
+                "timestamp": violation.timestamp.isoformat(),
+                "violation_type": violation.violation_type.value,
+                "level": violation.level.value,
+                "message": violation.message
+            })
+        
+        self._add_streaming_event("real_time_check_completed", {
+            "violations_found": len(violations),
+            "critical_violations": len([v for v in violations if v.level == ComplianceLevel.CRITICAL]),
+            "interrupt_triggered": dynamic_interrupt_triggered
+        })
+        
+        return ComplianceCheckResult(
+            passed=len(violations) == 0,
+            violations=violations,
+            warnings=[],
+            action_allowed=not any(v.action_blocked for v in violations),
+            human_review_required=any(v.human_review_required for v in violations),
+            dynamic_interrupt_triggered=dynamic_interrupt_triggered,
+            streaming_events=streaming_events + self.streaming_events[-10:],  # Include recent events
+            audit_log_entry={
+                "timestamp": datetime.utcnow().isoformat(),
+                "check_type": "real_time_compliance",
+                "violations_count": len(violations),
+                "interrupt_triggered": dynamic_interrupt_triggered
+            }
+        )
+    
+    def check_essay_content_prevention(
+        self, 
+        query: str, 
+        response: str,
+        context: Optional[Dict[str, Any]] = None
+    ) -> ComplianceCheckResult:
+        """
+        Enhanced check for essay content generation violations with streaming
+        
+        CRITICAL: Must prevent any AI generation of essay/narrative content
+        """
+        
+        violations = []
+        warnings = []
+        
+        query_lower = query.lower()
+        response_lower = response.lower()
+        
+        # Check for direct essay generation requests
+        essay_requests = [
+            "write my essay",
+            "create my narrative", 
+            "draft my response",
+            "help me write",
+            "generate essay",
+            "compose narrative"
+        ]
+        
+        for pattern in essay_requests:
+            if pattern in query_lower:
+                violations.append(ComplianceViolation(
+                    violation_type=ViolationType.ESSAY_CONTENT_GENERATION,
+                    level=ComplianceLevel.CRITICAL,
+                    message=f"Direct essay generation request detected: '{pattern}'",
+                    context={"query": query, "pattern": pattern},
+                    timestamp=datetime.utcnow(),
+                    action_blocked=True,
+                    human_review_required=True
+                ))
+        
+        # Check response for generated content
+        violation_patterns = self.violation_patterns[ViolationType.ESSAY_CONTENT_GENERATION]
+        for pattern in violation_patterns:
+            if pattern in response_lower:
+                violations.append(ComplianceViolation(
+                    violation_type=ViolationType.ESSAY_CONTENT_GENERATION,
+                    level=ComplianceLevel.CRITICAL,
+                    message=f"Essay content generation detected in response: '{pattern}'",
+                    context={"response_snippet": response[:200], "pattern": pattern},
+                    timestamp=datetime.utcnow(),
+                    action_blocked=True,
+                    human_review_required=True
+                ))
+        
+        # Check for STAR method content creation (should guide, not create)
+        if "star method" in response_lower:
+            star_violations = [
+                "situation: when i",
+                "task: i was responsible",
+                "action: i did", 
+                "result: i achieved"
+            ]
+            for pattern in star_violations:
+                if pattern in response_lower:
+                    violations.append(ComplianceViolation(
+                        violation_type=ViolationType.ESSAY_CONTENT_GENERATION,
+                        level=ComplianceLevel.CRITICAL,
+                        message="STAR method content creation detected - should only provide guidance",
+                        context={"pattern": pattern},
+                        timestamp=datetime.utcnow(),
+                        action_blocked=True,
+                        human_review_required=True
+                    ))
+        
+        # Check for helpful guidance (allowed)
+        helpful_patterns = [
+            "use the star method",
+            "limit to 200 words",
+            "focus on specific examples",
+            "describe your experience",
+            "think about a time when"
+        ]
+        
+        guidance_found = any(pattern in response_lower for pattern in helpful_patterns)
+        if guidance_found and not violations:
+            warnings.append("Essay guidance provided - ensure no content generation occurred")
+        
+        # Stream compliance check events
+        self._add_streaming_event("essay_compliance_check", {
+            "violations_found": len(violations),
+            "guidance_provided": guidance_found,
+            "patterns_checked": len(violation_patterns) + len(helpful_patterns)
+        })
+        
+        return self._create_check_result(violations, warnings, "essay_content_prevention")
+    
+    def check_word_limit_enforcement(
+        self, 
+        query: str, 
+        response: str,
+        context: Optional[Dict[str, Any]] = None
+    ) -> ComplianceCheckResult:
+        """
+        Check for 200-word limit enforcement violations
+        """
+        
+        violations = []
+        warnings = []
+        
+        response_lower = response.lower()
+        
+        # Check for word limit violations
+        violation_patterns = self.violation_patterns[ViolationType.WORD_LIMIT_VIOLATION]
+        for pattern in violation_patterns:
+            if pattern in response_lower:
+                violations.append(ComplianceViolation(
+                    violation_type=ViolationType.WORD_LIMIT_VIOLATION,
+                    level=ComplianceLevel.HIGH,
+                    message=f"Word limit violation guidance detected: '{pattern}'",
+                    context={"pattern": pattern},
+                    timestamp=datetime.utcnow(),
+                    action_blocked=True,
+                    human_review_required=True
+                ))
+        
+        # Check that 200-word limit is mentioned when relevant
+        if any(word in query.lower() for word in ["essay", "narrative", "ksa", "writing"]):
+            limit_mentioned = any(phrase in response_lower for phrase in [
+                "200 word", "200-word", "within 200", "limit to 200", "maximum 200"
+            ])
+            
+            if not limit_mentioned:
+                warnings.append("200-word limit should be mentioned for essay/narrative guidance")
+        
+        # Stream word limit check events
+        self._add_streaming_event("word_limit_check", {
+            "violations_found": len(violations),
+            "limit_mentioned": "200 word" in response.lower()
+        })
+        
+        return self._create_check_result(violations, warnings, "word_limit_enforcement")
+    
+    def check_ai_attestation_compliance(
+        self, 
+        query: str, 
+        response: str,
+        context: Optional[Dict[str, Any]] = None
+    ) -> ComplianceCheckResult:
+        """
+        Check for AI attestation compliance violations
+        """
+        
+        violations = []
+        warnings = []
+        
+        response_lower = response.lower()
+        
+        # Check for AI attestation violations
+        violation_patterns = self.violation_patterns[ViolationType.AI_ATTESTATION_VIOLATION]
+        for pattern in violation_patterns:
+            if pattern in response_lower:
+                violations.append(ComplianceViolation(
+                    violation_type=ViolationType.AI_ATTESTATION_VIOLATION,
+                    level=ComplianceLevel.CRITICAL,
+                    message=f"AI attestation violation: '{pattern}'",
+                    context={"pattern": pattern},
+                    timestamp=datetime.utcnow(),
+                    action_blocked=True,
+                    human_review_required=True
+                ))
+        
+        # Check for proper attestation guidance when relevant
+        if any(word in query.lower() for word in ["application", "attestation", "certification"]):
+            attestation_guidance = any(phrase in response_lower for phrase in [
+                "certify that this is your own work",
+                "attest that you completed",
+                "confirm your responses are original",
+                "verify your own work"
+            ])
+            
+            if attestation_guidance:
+                warnings.append("Attestation guidance provided - ensure compliance with Merit Hiring")
+        
+        # Stream attestation check events  
+        self._add_streaming_event("ai_attestation_check", {
+            "violations_found": len(violations),
+            "guidance_provided": "attest" in response.lower()
+        })
+        
+        return self._create_check_result(violations, warnings, "ai_attestation_compliance")
+    
+    def check_protected_file_access(
+        self, 
+        action: str,
+        file_paths: List[str],
+        context: Optional[Dict[str, Any]] = None
+    ) -> ComplianceCheckResult:
+        """
+        Check for protected file modification attempts
+        """
+        
+        violations = []
+        warnings = []
+        
+        # Define protected file patterns
+        protected_patterns = [
+            "resume",
+            "application", 
+            "personal",
+            "private",
+            "user_data",
+            "credentials"
+        ]
+        
+        action_lower = action.lower()
+        
+        # Check for protected file access
+        for file_path in file_paths:
+            file_path_lower = file_path.lower()
+            
+            for pattern in protected_patterns:
+                if pattern in file_path_lower:
+                    if any(verb in action_lower for verb in ["write", "modify", "edit", "delete", "change"]):
+                        violations.append(ComplianceViolation(
+                            violation_type=ViolationType.PROTECTED_FILE_ACCESS,
+                            level=ComplianceLevel.HIGH,
+                            message=f"Attempt to modify protected file: {file_path}",
+                            context={"action": action, "file_path": file_path, "pattern": pattern},
+                            timestamp=datetime.utcnow(),
+                            action_blocked=True,
+                            human_review_required=True
+                        ))
+                    elif any(verb in action_lower for verb in ["read", "access", "view"]):
+                        warnings.append(f"Protected file access: {file_path}")
+        
+        # Stream file access check events
+        self._add_streaming_event("file_access_check", {
+            "files_checked": len(file_paths),
+            "violations_found": len(violations),
+            "action_type": action
+        })
+        
+        return self._create_check_result(violations, warnings, "protected_file_access")
+    
+    def check_usajobs_api_compliance(
+        self, 
+        api_call: str,
+        parameters: Dict[str, Any],
+        context: Optional[Dict[str, Any]] = None
+    ) -> ComplianceCheckResult:
+        """
+        Check USAJobs API usage for compliance violations
+        """
+        
+        violations = []
+        warnings = []
+        
+        # Check for fields=full parameter (should not be used for bulk collection)
+        if "fields" in parameters:
+            fields_value = str(parameters["fields"]).lower()
+            
+            if fields_value == "full" or fields_value == "all":
+                # Check if this is legitimate single job lookup vs bulk collection
+                if "bulk" in api_call.lower() or "collection" in api_call.lower():
+                    violations.append(ComplianceViolation(
+                        violation_type=ViolationType.USAJOBS_API_MISUSE,
+                        level=ComplianceLevel.HIGH,
+                        message="fields=full parameter used for bulk collection",
+                        context={"api_call": api_call, "parameters": parameters},
+                        timestamp=datetime.utcnow(),
+                        action_blocked=True,
+                        human_review_required=True
+                    ))
+                else:
+                    warnings.append("fields=full parameter used - ensure legitimate single job lookup")
+        
+        # Check for mass data collection patterns
+        violation_patterns = self.violation_patterns[ViolationType.USAJOBS_API_MISUSE]
+        api_call_lower = api_call.lower()
+        
+        for pattern in violation_patterns:
+            if pattern in api_call_lower:
+                violations.append(ComplianceViolation(
+                    violation_type=ViolationType.USAJOBS_API_MISUSE,
+                    level=ComplianceLevel.HIGH,
+                    message=f"USAJobs API misuse detected: '{pattern}'",
+                    context={"pattern": pattern, "api_call": api_call},
+                    timestamp=datetime.utcnow(),
+                    action_blocked=True,
+                    human_review_required=True
+                ))
+        
+        # Check request frequency (basic rate limiting)
+        if context and context.get("request_count", 0) > 100:
+            warnings.append("High API request frequency detected - monitor for abuse")
+        
+        # Stream API compliance check events
+        self._add_streaming_event("api_compliance_check", {
+            "api_call": api_call,
+            "violations_found": len(violations),
+            "fields_parameter_used": "fields" in parameters
+        })
+        
+        return self._create_check_result(violations, warnings, "usajobs_api_compliance")
+    
+    def check_budget_constraints(
+        self, 
+        action: str,
+        cost_estimate: float,
+        context: Optional[Dict[str, Any]] = None
+    ) -> ComplianceCheckResult:
+        """
+        Check budget constraint compliance ($0 external development)
+        """
+        
+        violations = []
+        warnings = []
+        
+        # Check for external development costs
+        if cost_estimate > 0:
+            external_keywords = [
+                "contractor", "freelancer", "hire", "outsource",
+                "agency", "consultant", "developer for hire"
+            ]
+            
+            action_lower = action.lower()
+            
+            if any(keyword in action_lower for keyword in external_keywords):
+                violations.append(ComplianceViolation(
+                    violation_type=ViolationType.BUDGET_CONSTRAINT_VIOLATION,
+                    level=ComplianceLevel.CRITICAL,
+                    message=f"External development cost detected: ${cost_estimate}",
+                    context={"action": action, "cost": cost_estimate},
+                    timestamp=datetime.utcnow(),
+                    action_blocked=True,
+                    human_review_required=True
+                ))
+        
+        # Check for tool/subscription costs
+        if cost_estimate > 100:  # Monthly tool budget limit
+            tool_keywords = ["subscription", "tool", "service", "api", "platform"]
+            action_lower = action.lower()
+            
+            if any(keyword in action_lower for keyword in tool_keywords):
+                violations.append(ComplianceViolation(
+                    violation_type=ViolationType.BUDGET_CONSTRAINT_VIOLATION,
+                    level=ComplianceLevel.HIGH,
+                    message=f"Tool cost exceeds budget limit: ${cost_estimate}",
+                    context={"action": action, "cost": cost_estimate, "limit": 100},
+                    timestamp=datetime.utcnow(),
+                    action_blocked=False,  # Warning but can proceed with approval
+                    human_review_required=True
+                ))
+        
+        # Stream budget check events
+        self._add_streaming_event("budget_check", {
+            "cost_estimate": cost_estimate,
+            "violations_found": len(violations),
+            "budget_exceeded": cost_estimate > 100
+        })
+        
+        return self._create_check_result(violations, warnings, "budget_constraints")
+    
+    async def comprehensive_compliance_check(
+        self,
+        query: str,
+        response: str,
+        context: Optional[Dict[str, Any]] = None,
+        enable_real_time_monitoring: bool = True
+    ) -> ComplianceCheckResult:
+        """
+        Run comprehensive compliance check across all gates with streaming
+        """
+        
+        self._add_streaming_event("comprehensive_check_started", {
+            "query_length": len(query),
+            "response_length": len(response),
+            "context_provided": context is not None,
+            "real_time_monitoring": enable_real_time_monitoring
+        })
+        
+        all_violations = []
+        all_warnings = []
+        all_streaming_events = []
+        dynamic_interrupt_triggered = False
+        
+        # Run real-time monitoring first if enabled
+        if enable_real_time_monitoring:
+            real_time_result = await self.real_time_compliance_check(response, context)
+            all_violations.extend(real_time_result.violations)
+            all_warnings.extend(real_time_result.warnings)
+            all_streaming_events.extend(real_time_result.streaming_events)
+            dynamic_interrupt_triggered = real_time_result.dynamic_interrupt_triggered
+        
+        # Run all individual checks
+        checks = [
+            self.check_essay_content_prevention(query, response, context),
+            self.check_word_limit_enforcement(query, response, context),
+            self.check_ai_attestation_compliance(query, response, context)
+        ]
+        
+        # Add context-specific checks
+        if context:
+            if "file_paths" in context:
+                checks.append(self.check_protected_file_access(
+                    context.get("action", ""), 
+                    context["file_paths"], 
+                    context
+                ))
+            
+            if "api_parameters" in context:
+                checks.append(self.check_usajobs_api_compliance(
+                    context.get("api_call", ""),
+                    context["api_parameters"],
+                    context
+                ))
+            
+            if "cost_estimate" in context:
+                checks.append(self.check_budget_constraints(
+                    context.get("action", ""),
+                    context["cost_estimate"],
+                    context
+                ))
+        
+        # Aggregate results
+        for check in checks:
+            all_violations.extend(check.violations)
+            all_warnings.extend(check.warnings)
+            # Collect streaming events from individual checks
+            if hasattr(check, 'streaming_events'):
+                all_streaming_events.extend(check.streaming_events)
+        
+        self._add_streaming_event("comprehensive_check_completed", {
+            "total_violations": len(all_violations),
+            "total_warnings": len(all_warnings),
+            "critical_violations": len([v for v in all_violations if v.level == ComplianceLevel.CRITICAL]),
+            "dynamic_interrupt_triggered": dynamic_interrupt_triggered
+        })
+        
+        return self._create_enhanced_check_result(
+            all_violations, all_warnings, all_streaming_events, 
+            dynamic_interrupt_triggered, "comprehensive_check"
+        )
+    
+    def _create_check_result(
+        self, 
+        violations: List[ComplianceViolation], 
+        warnings: List[str], 
+        check_type: str
+    ) -> ComplianceCheckResult:
+        """Create a basic compliance check result (backward compatibility)"""
+        
+        return self._create_enhanced_check_result(
+            violations, warnings, [], False, check_type
+        )
+    
+    def _create_enhanced_check_result(
+        self, 
+        violations: List[ComplianceViolation], 
+        warnings: List[str],
+        streaming_events: List[Dict[str, Any]],
+        dynamic_interrupt_triggered: bool,
+        check_type: str
+    ) -> ComplianceCheckResult:
+        """Create an enhanced compliance check result with streaming support"""
+        
+        # Determine if action should be blocked
+        critical_violations = [v for v in violations if v.level == ComplianceLevel.CRITICAL]
+        high_violations = [v for v in violations if v.level == ComplianceLevel.HIGH]
+        
+        action_blocked = len(critical_violations) > 0
+        human_review_required = len(critical_violations) > 0 or len(high_violations) > 0
+        
+        # Create audit log entry with enhanced data
+        audit_entry = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "check_type": check_type,
+            "violations_count": len(violations),
+            "warnings_count": len(warnings),
+            "action_blocked": action_blocked,
+            "human_review_required": human_review_required,
+            "critical_violations": len(critical_violations),
+            "high_violations": len(high_violations),
+            "dynamic_interrupt_triggered": dynamic_interrupt_triggered,
+            "streaming_events_count": len(streaming_events),
+            "real_time_monitoring_enabled": self.streaming_enabled
+        }
+        
+        self.audit_log.append(audit_entry)
+        
+        # Add audit entry to streaming events
+        self._add_streaming_event("audit_log_created", {
+            "audit_entry_id": len(self.audit_log) - 1,
+            "check_type": check_type,
+            "violations_count": len(violations)
+        })
+        
+        return ComplianceCheckResult(
+            passed=len(violations) == 0,
+            violations=violations,
+            warnings=warnings,
+            action_allowed=not action_blocked,
+            human_review_required=human_review_required,
+            dynamic_interrupt_triggered=dynamic_interrupt_triggered,
+            streaming_events=streaming_events + self.streaming_events[-5:],  # Include recent events
+            audit_log_entry=audit_entry
+        )
+    
+    def get_audit_log(self, limit: Optional[int] = None) -> List[Dict[str, Any]]:
+        """Get compliance audit log"""
+        
+        if limit:
+            return self.audit_log[-limit:]
+        return self.audit_log.copy()
+    
+    def clear_audit_log(self) -> None:
+        """Clear audit log (use with caution)"""
+        
+        logger.warning("Compliance audit log cleared")
+        self.audit_log.clear()
+    
+    def export_compliance_report(self, include_streaming_data: bool = True) -> Dict[str, Any]:
+        """Export comprehensive compliance report with streaming analytics"""
+        
+        total_checks = len(self.audit_log)
+        violations_by_type = {}
+        
+        # Count violations by type from audit log
+        for entry in self.audit_log:
+            check_type = entry.get("check_type", "unknown")
+            violations_by_type[check_type] = violations_by_type.get(check_type, 0) + entry.get("violations_count", 0)
+        
+        report = {
+            "report_generated": datetime.utcnow().isoformat(),
+            "total_compliance_checks": total_checks,
+            "violations_by_type": violations_by_type,
+            "recent_violations": [
+                entry for entry in self.audit_log[-50:] 
+                if entry.get("violations_count", 0) > 0
+            ],
+            "human_reviews_required": len([
+                entry for entry in self.audit_log 
+                if entry.get("human_review_required", False)
+            ]),
+            "actions_blocked": len([
+                entry for entry in self.audit_log 
+                if entry.get("action_blocked", False)
+            ]),
+            "dynamic_interrupts_triggered": len([
+                entry for entry in self.audit_log
+                if entry.get("dynamic_interrupt_triggered", False)
+            ]),
+            "real_time_monitoring_enabled": self.streaming_enabled,
+            "compliance_system_status": {
+                "monitors_active": len(self.real_time_monitors),
+                "streaming_enabled": self.streaming_enabled,
+                "dynamic_interrupts_enabled": self.dynamic_interrupts_enabled
+            }
+        }
+        
+        # Include streaming data if requested
+        if include_streaming_data:
+            recent_events = self.streaming_events[-100:]  # Last 100 events
+            report["streaming_analytics"] = {
+                "total_events": len(self.streaming_events),
+                "recent_events": recent_events,
+                "event_types_summary": self._analyze_event_types(recent_events),
+                "critical_events_last_hour": self._get_critical_events_last_hour()
+            }
+        
+        return report
+    
+    def _analyze_event_types(self, events: List[Dict[str, Any]]) -> Dict[str, int]:
+        """Analyze event types for reporting"""
+        
+        event_counts = {}
+        for event in events:
+            event_type = event.get("event_type", "unknown")
+            event_counts[event_type] = event_counts.get(event_type, 0) + 1
+        
+        return event_counts
+    
+    def _get_critical_events_last_hour(self) -> List[Dict[str, Any]]:
+        """Get critical compliance events from the last hour"""
+        
+        one_hour_ago = datetime.utcnow().timestamp() - 3600
+        critical_events = []
+        
+        for event in self.streaming_events:
+            try:
+                event_time = datetime.fromisoformat(event["timestamp"]).timestamp()
+                if event_time >= one_hour_ago:
+                    if event["event_type"] in ["critical_violation_detected", "dynamic_interrupt_triggered", "human_review_required"]:
+                        critical_events.append(event)
+            except (KeyError, ValueError):
+                continue
+        
+        return critical_events
+    
+    async def get_real_time_status(self) -> Dict[str, Any]:
+        """Get real-time status of compliance system"""
+        
+        recent_events = self.streaming_events[-10:]  # Last 10 events
+        
+        return {
+            "timestamp": datetime.utcnow().isoformat(),
+            "system_status": "active" if self.streaming_enabled else "passive",
+            "monitors_active": len(self.real_time_monitors),
+            "recent_events": recent_events,
+            "total_audit_entries": len(self.audit_log),
+            "streaming_events_count": len(self.streaming_events),
+            "last_activity": recent_events[-1]["timestamp"] if recent_events else None
+        }
+    
+    def clear_streaming_events(self, keep_recent: int = 100) -> None:
+        """Clear streaming events, keeping only recent ones for performance"""
+        
+        if len(self.streaming_events) > keep_recent:
+            self.streaming_events = self.streaming_events[-keep_recent:]
+            logger.info(f"Cleared streaming events, kept {keep_recent} recent events")
+
+
+# Create singleton instance
+_compliance_gates_instance = None
+
+def get_compliance_gates(enable_streaming: bool = True, enable_dynamic_interrupts: bool = True) -> MeritHiringGates:
+    """Get or create the global compliance gates instance with enhanced features"""
+    global _compliance_gates_instance
+    
+    if _compliance_gates_instance is None:
+        _compliance_gates_instance = MeritHiringGates(
+            enable_streaming=enable_streaming,
+            enable_dynamic_interrupts=enable_dynamic_interrupts
+        )
+    
+    return _compliance_gates_instance
+
+
+# Export main classes and functions
+__all__ = [
+    "MeritHiringGates",
+    "ComplianceLevel",
+    "ViolationType", 
+    "ComplianceViolation",
+    "ComplianceCheckResult",
+    "get_compliance_gates"
+]
