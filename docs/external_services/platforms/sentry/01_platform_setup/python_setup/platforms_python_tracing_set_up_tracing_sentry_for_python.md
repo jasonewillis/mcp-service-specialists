@@ -1,0 +1,15 @@
+---
+title: "Set Up Tracing | Sentry for Python"
+source_url: "https://docs.sentry.io/platforms/python/tracing/"
+scraped_date: "2025-08-19T18:27:45.906102"
+description: "With Tracing, Sentry tracks your software performance, measuring metrics like throughput and latency, and displays the impact of errors across multiple systems."
+platform: "sentry"
+category: "error_monitoring"
+stack: "fed_job_advisor"
+note: "Documentation focused on Fed Job Advisor production deployment"
+---
+**Note: This documentation is focused on production deployment for Fed Job Advisor**
+
+# Set Up Tracing | Sentry for Python
+
+HomePlatformsPythonTracing Copy pageSet Up TracingWith Tracing, Sentry tracks your software performance, measuring metrics like throughput and latency, and displays the impact of errors across multiple systems.PrerequisitesYou have the Python SDK installed (version 0.11.2 or higher)ConfigureTo enable tracing in your application, adjust the traces_sample_rate based on the number of trace samples you want to send to Sentry by adding the highlighted code snippet below. (Setting a value of 1.0 will send 100% of your traces.)PythonCopiedimport sentry_sdk sentry_sdk.init( dsn="https://examplePublicKey@o0.ingest.sentry.io/0", # Add data like request headers and IP for users, if applicable; # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info send_default_pii=True, # Set traces_sample_rate to 1.0 to capture 100% # of transactions for tracing. + traces_sample_rate=1.0, ) If you’re adopting Tracing in a high-throughput environment, we recommend testing prior to deployment to ensure that your service’s performance characteristics maintain expectations.Learn more about tracing options, how to use the traces_sampler function, or how to sample transactions.Next StepsSpan LifecycleLearn how to add attributes to spans in Sentry to monitor performance and debug applications.Sending Span MetricsLearn how to add attributes to spans in Sentry to monitor performance and debug applications Set Up Distributed TracingLearn how to connect events across applications/services.Configure SamplingLearn how to configure sampling in your app.InstrumentationLearn what Sentry instruments automatically, and how to configure spans to capture tracing data on any action in your app.TroubleshootingLearn how to troubleshoot your tracing setup.PreviousData ManagementNextSpan LifecycleWas this helpful?Yes 👍No 👎How can we improve this page?Submit feedbackHelp improve this contentOur documentation is open source and available on GitHub. Your contributions are welcome, whether fixing a typo (drat!) or suggesting an update ("yeah, this would be better").How to contribute | Edit this page | Create a docs issue | Get support Package DetailsLatest version: 2.35.0pypi:sentry-sdkRepository on GitHubAPI documentation

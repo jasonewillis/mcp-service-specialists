@@ -13,3 +13,8 @@ httpx==0.25.2
 pydantic==2.5.3
 python-multipart==0.0.6
 asyncio==3.4.3
+
+# Webscraping dependencies
+aiohttp==3.9.1
+beautifulsoup4==4.12.2
+lxml==4.9.3

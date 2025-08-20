@@ -1,0 +1,15 @@
+---
+title: "Installation Methods | Sentry for JavaScript"
+source_url: "https://docs.sentry.io/platforms/javascript/install"
+scraped_date: "2025-08-19T18:28:15.319959"
+description: "Review our alternate installation methods."
+platform: "sentry"
+category: "error_monitoring"
+stack: "fed_job_advisor"
+note: "Documentation focused on Fed Job Advisor production deployment"
+---
+**Note: This documentation is focused on production deployment for Fed Job Advisor**
+
+# Installation Methods | Sentry for JavaScript
+
+HomePlatformsJavaScriptInstallation Methods Copy pageInstallation MethodsReview our alternate installation methods.NPMLearn about installing with NPM.Loader ScriptLearn about the Sentry JavaScript Loader ScriptHow To Decide Which Installation Method To UseDepending on the concrete needs of your application, you may wonder which installation method you should use.Why Choose the Loader Script Over NPMUsing the Loader Script is the easiest way to start using Sentry. Add a script tag to your application, and we'll take care of setting everything else up correctly for you.Easy to set up: Just add a script tag to your application.Easy to upgrade: We'll take care of always shipping the latest version of the SDK to your users. No action's needed from you. This ensures you'll always get the latest features and bug fixes of the Sentry SDK.Easy to add additional configuration: You can configure the SDK to your liking via window.sentryOnLoad.Lazy-loading: If you just want to use Sentry for errors, we'll only load the SDK when an error occurs, reducing the amount of JavaScript loaded on your page until then.Note that when enabling Session Replay and/or Tracing, the SDK will be loaded immediately because we need to capture what's happening on the page as early as possible.Why Choose NPM Over the Loader ScriptWhile using the Loader Script has definite advantages, it also comes with some drawbacks. In these scenarios, using the npm package is the better choice:Framework-specific initialization: As of now, the Loader Script only provides generic Browser JavaScript instrumentation. This means that you won't get any React, Vue, or similar framework-specific features for Sentry. To get these features, you'll need to install the framework SDK (e.g. @sentry/react or @sentry/vue) via npm.Full public API: The Loader Script only exposes a subset of public APIs (for example, Sentry.captureException(), ...). If you need a lot of custom functionality, you're likely better off with the npm package.Full control over the SDK version: If you need full control over the SDK version, you'll need to install the SDK via npm.PreviousBrowser JavaScriptNextNPMWas this helpful?Yes 👍No 👎How can we improve this page?Submit feedbackHelp improve this contentOur documentation is open source and available on GitHub. Your contributions are welcome, whether fixing a typo (drat!) or suggesting an update ("yeah, this would be better").How to contribute | Edit this page | Create a docs issue | Get support Package DetailsLatest version: 10.5.0npm:@sentry/browserRepository on GitHub

@@ -4,6 +4,9 @@ uvicorn[standard]==0.24.0
 pydantic>=2.7.4,<3.0.0
 pydantic-settings>=2.4.0,<3.0.0
 
+# MCP Protocol
+mcp>=1.0.0
+
 # LangChain Ecosystem
 langchain==0.3.7
 langchain-community==0.3.7

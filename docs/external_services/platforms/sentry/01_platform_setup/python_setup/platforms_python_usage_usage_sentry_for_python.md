@@ -1,0 +1,15 @@
+---
+title: "Usage | Sentry for Python"
+source_url: "https://docs.sentry.io/platforms/python/usage/"
+scraped_date: "2025-08-19T18:27:45.906328"
+description: "Use the SDK to manually capture errors and other events."
+platform: "sentry"
+category: "error_monitoring"
+stack: "fed_job_advisor"
+note: "Documentation focused on Fed Job Advisor production deployment"
+---
+**Note: This documentation is focused on production deployment for Fed Job Advisor**
+
+# Usage | Sentry for Python
+
+HomePlatformsPythonUsage Copy pageUsageUse the SDK to manually capture errors and other events.Sentry's SDK hooks into your runtime environment and automatically reports errors, uncaught exceptions, and unhandled rejections as well as other types of errors depending on the platform.Key terms:An event is one instance of sending data to Sentry. Generally, this data is an error or exception.An issue is a grouping of similar events.The reporting of an event is called capturing. When an event is captured, it’s sent to Sentry.The most common form of capturing is to capture errors. What can be captured as an error varies by platform. In general, if you have something that looks like an exception, it can be captured. For some SDKs, you can also omit the argument to capture_exception and Sentry will attempt to capture the current exception. It is also useful for manual reporting of errors or messages to Sentry.While capturing an event, you can also record the breadcrumbs that lead up to that event. Breadcrumbs are different from events: they will not create an event in Sentry, but will be buffered until the next event is sent. Learn more about breadcrumbs in our Breadcrumbs documentation.Capturing ErrorsIn Python you can either capture a caught exception or the one currently held in sys.exc_info() by not passing an argument:PythonCopiedimport sentry_sdk try: a_potentially_failing_function() except Exception as e: # Alternatively the argument can be omitted sentry_sdk.capture_exception(e) Capturing MessagesAnother common operation is to capture a bare message. A message is textual information that should be sent to Sentry. Typically, our SDKs don't automatically capture messages, but you can capture them manually.Messages show up as issues on your issue stream, with the message as the issue name.PythonCopiedimport sentry_sdk sentry_sdk.capture_message('Something went wrong') PreviousConfigurationNextSet the LevelWas this helpful?Yes 👍No 👎How can we improve this page?Submit feedbackHelp improve this contentOur documentation is open source and available on GitHub. Your contributions are welcome, whether fixing a typo (drat!) or suggesting an update ("yeah, this would be better").How to contribute | Edit this page | Create a docs issue | Get support Package DetailsLatest version: 2.35.0pypi:sentry-sdkRepository on GitHubAPI documentation

@@ -1,0 +1,15 @@
+---
+title: "Set Up User Feedback | Sentry for Python"
+source_url: "https://docs.sentry.io/platforms/python/user-feedback/"
+scraped_date: "2025-08-19T18:27:45.906222"
+description: "Learn more about collecting user feedback when an event occurs. Sentry pairs the feedback with the original event, giving you additional insight into issues."
+platform: "sentry"
+category: "error_monitoring"
+stack: "fed_job_advisor"
+note: "Documentation focused on Fed Job Advisor production deployment"
+---
+**Note: This documentation is focused on production deployment for Fed Job Advisor**
+
+# Set Up User Feedback | Sentry for Python
+
+HomePlatformsPythonUser Feedback Copy pageSet Up User FeedbackLearn more about collecting user feedback when an event occurs. Sentry pairs the feedback with the original event, giving you additional insight into issues.When a user experiences an error, Sentry provides the ability to collect additional feedback. You can collect feedback according to the method supported by the SDK.Crash-Report ModalOur embeddable, JavaScript-based, Crash-Report modal is useful when you would typically render a plain error page (the classic 500.html) on your website.To collect feedback, the Crash-Report modal requests and collects the user's name, email address, and a description of what occurred. When feedback is provided, Sentry pairs the feedback with the original event, giving you additional insights into issues.The screenshot below provides an example of the Crash-Report modal, though yours may differ depending on your customization:IntegrationThe modal authenticates with your public DSN, then passes in the Event ID that was generated on your backend.Retrieve the last_event_id on your server and pass it to the HTML template to use during template rendering (this example uses Flask but the principle is the same on every framework):PythonCopiedimport sentry_sdk from flask import render_template @app.errorhandler(500) def server_error_handler(error): event_id=sentry_sdk.last_event_id() return render_template("500.html", sentry_event_id=event_id), 500 Make sure you've got the JavaScript SDK available:HTMLCopied<script src="https://browser.sentry-cdn.com/10.5.0/bundle.min.js" integrity="sha384-SAsRvjfAFRX3iwi3MG6ToeZNJVpHcRXKcITfFVLQipWK3uQ8SakuVmHDoSR3YNmJ" crossorigin="anonymous" ></script> And the code that brings up the dialog in your template:HTMLCopied{% if sentry_event_id %} <script> Sentry.init({ dsn: "https://examplePublicKey@o0.ingest.sentry.io/0" }); Sentry.showReportDialog({ eventId: "{{ sentry_event_id }}" }); </script> {% endif %} PreviousSet Up LogsNextConfigurationWas this helpful?Yes 👍No 👎How can we improve this page?Submit feedbackHelp improve this contentOur documentation is open source and available on GitHub. Your contributions are welcome, whether fixing a typo (drat!) or suggesting an update ("yeah, this would be better").How to contribute | Edit this page | Create a docs issue | Get support Package DetailsLatest version: 2.35.0pypi:sentry-sdkRepository on GitHubAPI documentation

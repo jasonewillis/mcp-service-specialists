@@ -1,36 +1,64 @@
 # Fed Job Advisor MCP Agents - Complete Registry
 
-**Total Agents**: 10  
+**Total Agents**: 30+ (10 Core + 20+ Specialized)  
 **Cost Savings**: 90% reduction vs cloud LLMs (~$0.24/session each)  
 **Integration**: Ultimate Workflow Integration compatible  
-**Status**: Active and ready for fedJobAdvisor development  
+**Status**: Active with enhanced specialized agent system  
 
 ---
 
-## 🤖 Role-Based Technical Agents (5)
+## 🤖 **CORE AGENTS** - Federal Job Intelligence (10 Agents)
+
+### 🔧 [Technical Agents](./core/technical/) - Role-Based Analysis (5)
 
 | Agent | Endpoint | Domain | Documentation |
 |-------|----------|--------|---------------|
-| Data Scientist Agent | `data-scientist` | Series 1560 Analysis | [DATA_SCIENTIST_AGENT.md](./DATA_SCIENTIST_AGENT.md) |
-| Statistician Agent | `statistician` | Series 1530 Analysis | [STATISTICIAN_AGENT.md](./STATISTICIAN_AGENT.md) |
-| Database Admin Agent | `database-admin` | Series 2210/0334 Analysis | [DATABASE_ADMIN_AGENT.md](./DATABASE_ADMIN_AGENT.md) |
-| DevOps Engineer Agent | `devops` | Series 2210 DevOps | [DEVOPS_AGENT.md](./DEVOPS_AGENT.md) |
-| IT Specialist Agent | `it-specialist` | Series 2210 General IT | [IT_SPECIALIST_AGENT.md](./IT_SPECIALIST_AGENT.md) |
+| Data Scientist Agent | `data-scientist` | Series 1560 Analysis | [technical/DATA_SCIENTIST_AGENT.md](./core/technical/DATA_SCIENTIST_AGENT.md) |
+| Statistician Agent | `statistician` | Series 1530 Analysis | [technical/STATISTICIAN_AGENT.md](./core/technical/STATISTICIAN_AGENT.md) |
+| Database Admin Agent | `database-admin` | Series 2210/0334 Analysis | [technical/DATABASE_ADMIN_AGENT.md](./core/technical/DATABASE_ADMIN_AGENT.md) |
+| DevOps Engineer Agent | `devops` | Series 2210 DevOps | [technical/DEVOPS_AGENT.md](./core/technical/DEVOPS_AGENT.md) |
+| IT Specialist Agent | `it-specialist` | Series 2210 General IT | [technical/IT_SPECIALIST_AGENT.md](./core/technical/IT_SPECIALIST_AGENT.md) |
 
-## 🛡️ Compliance Agents (3)
-
-| Agent | Endpoint | Domain | Documentation |
-|-------|----------|--------|---------------|
-| Essay Compliance Agent | `essay-compliance` | Merit Hiring Compliance | [ESSAY_COMPLIANCE_AGENT.md](./ESSAY_COMPLIANCE_AGENT.md) |
-| Resume Compression Agent | `resume-compression` | Federal Resume Optimization | [RESUME_COMPRESSION_AGENT.md](./RESUME_COMPRESSION_AGENT.md) |
-| Executive Orders Agent | `executive-orders` | Federal Policy Research | [EXECUTIVE_ORDERS_AGENT.md](./EXECUTIVE_ORDERS_AGENT.md) |
-
-## 📊 Analytics Agents (2)
+### 🛡️ [Compliance Agents](./core/compliance/) - Federal Standards (3)
 
 | Agent | Endpoint | Domain | Documentation |
 |-------|----------|--------|---------------|
-| Job Market Agent | `job-market` | Market Analysis & Intelligence | [JOB_MARKET_AGENT.md](./JOB_MARKET_AGENT.md) |
-| Collection Orchestration Agent | `collection-orchestration` | Data Pipeline Management | [COLLECTION_ORCHESTRATION_AGENT.md](./COLLECTION_ORCHESTRATION_AGENT.md) |
+| Essay Compliance Agent | `essay-compliance` | Merit Hiring Compliance | [compliance/ESSAY_COMPLIANCE_AGENT.md](./core/compliance/ESSAY_COMPLIANCE_AGENT.md) |
+| Resume Compression Agent | `resume-compression` | Federal Resume Optimization | [compliance/RESUME_COMPRESSION_AGENT.md](./core/compliance/RESUME_COMPRESSION_AGENT.md) |
+| Executive Orders Agent | `executive-orders` | Federal Policy Research | [compliance/EXECUTIVE_ORDERS_AGENT.md](./core/compliance/EXECUTIVE_ORDERS_AGENT.md) |
+
+### 📊 [Analytics Agents](./core/analytics/) - Market Intelligence (2)
+
+| Agent | Endpoint | Domain | Documentation |
+|-------|----------|--------|---------------|
+| Job Market Agent | `job-market` | Market Analysis & Intelligence | [analytics/JOB_MARKET_AGENT.md](./core/analytics/JOB_MARKET_AGENT.md) |
+| Collection Orchestration Agent | `collection-orchestration` | Data Pipeline Management | [analytics/COLLECTION_ORCHESTRATION_AGENT.md](./core/analytics/COLLECTION_ORCHESTRATION_AGENT.md) |
+
+---
+
+## 🚀 **SPECIALIZED AGENTS** - Development System (20+ Agents)
+
+### 🏗️ [Application Development](./specialized/application/)
+- **Frontend Development Agent** - React + Next.js 14 + shadcn/ui
+- **Backend Development Agent** - FastAPI + SQLModel + PostgreSQL
+
+### 🏛️ [Platform Development](./specialized/platform/)
+- **Platform Architecture Agent** - Microservices, Event Bus, API Gateway
+- **Integration & DevOps Agent** - Service Communication, Docker, CI/CD
+
+### 🛡️ [Federal Compliance](./specialized/federal_compliance/)
+- **Security & Compliance Agent** - OpenControl, NIST 800-53, USWDS
+- **HR Policy Compliance Agent** - USAJOBS API, OPM Standards, Merit Hiring
+
+### 🤖 [Automation](./specialized/automation/)
+- **Testing & QA Automation Agent** - pytest, CI/CD Testing, Quality Assurance
+- **RPA & Scripting Agent** - Selenium, Web Scraping, Form Automation
+
+### 🔧 [Infrastructure](./specialized/infrastructure/)
+- **Identity & Security Specialist** - Keycloak-style SSO, RBAC, JWT
+- **Data & Search Specialist** - Elasticsearch/OpenSearch, Geospatial
+
+**📚 Complete Specialized Documentation**: [SPECIALIZED_AGENTS_MASTER_REGISTRY.md](./specialized/SPECIALIZED_AGENTS_MASTER_REGISTRY.md)
 
 ---
 
@@ -83,22 +111,6 @@ const selectAgent = (task) => {
 - **Compliance Critical**: Essay Compliance, Resume Compression (25% of calls)
 - **Analytics Support**: Job Market, Collection Orchestration (20% of calls)
 - **Specialized Technical**: Database Admin, DevOps, IT Specialist (20% of calls)
-
----
-
-## 🔄 Optimization & Maintenance
-
-### Feedback Integration
-All agents support Claude Code feedback integration for continuous improvement:
-```python
-await submit_feedback(f"http://localhost:8001/feedback/{agent_endpoint}", feedback_data)
-```
-
-### Documentation Maintenance Schedule
-- **Daily**: Usage pattern monitoring
-- **Weekly**: Performance metrics review and optimization identification
-- **Monthly**: Agent capability enhancement and integration improvement
-- **Quarterly**: Federal requirement updates and strategic capability planning
 
 ---
 
