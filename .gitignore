@@ -71,3 +71,11 @@ models/
 tmp/
 temp/
 *.tmp
+# Stripe API Keys and Documentation
+**/stripe/**/*.md
+**/*stripe*.md
+*_api_key*
+*_secret*
+sk_test_*
+pk_test_*
+docs/external_services/platforms/stripe/
