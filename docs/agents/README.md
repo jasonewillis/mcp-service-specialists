@@ -13,11 +13,11 @@
 
 | Agent | Endpoint | Domain | Documentation |
 |-------|----------|--------|---------------|
-| Data Scientist Agent | `data-scientist` | Series 1560 Analysis | [technical/DATA_SCIENTIST_AGENT.md](./core/technical/DATA_SCIENTIST_AGENT.md) |
-| Statistician Agent | `statistician` | Series 1530 Analysis | [technical/STATISTICIAN_AGENT.md](./core/technical/STATISTICIAN_AGENT.md) |
-| Database Admin Agent | `database-admin` | Series 2210/0334 Analysis | [technical/DATABASE_ADMIN_AGENT.md](./core/technical/DATABASE_ADMIN_AGENT.md) |
-| DevOps Engineer Agent | `devops` | Series 2210 DevOps | [technical/DEVOPS_AGENT.md](./core/technical/DEVOPS_AGENT.md) |
-| IT Specialist Agent | `it-specialist` | Series 2210 General IT | [technical/IT_SPECIALIST_AGENT.md](./core/technical/IT_SPECIALIST_AGENT.md) |
+| Data Scientist Agent | `data-scientist` | ML/AI Development | [technical/DATA_SCIENTIST_AGENT.md](./core/technical/DATA_SCIENTIST_AGENT.md) |
+| Statistician Agent | `statistician` | Data Analysis | [technical/STATISTICIAN_AGENT.md](./core/technical/STATISTICIAN_AGENT.md) |
+| Database Admin Agent | `database-admin` | Database Architecture | [technical/DATABASE_ADMIN_AGENT.md](./core/technical/DATABASE_ADMIN_AGENT.md) |
+| DevOps Engineer Agent | `devops` | CI/CD & Infrastructure | [technical/DEVOPS_AGENT.md](./core/technical/DEVOPS_AGENT.md) |
+| IT Specialist Agent | `it-specialist` | Systems & Network | [technical/IT_SPECIALIST_AGENT.md](./core/technical/IT_SPECIALIST_AGENT.md) |
 
 ### 🛡️ [Compliance Agents](./core/compliance/) - Federal Standards (3)
 
@@ -86,11 +86,11 @@ async def call_any_agent(agent_endpoint, task_data):
 ```typescript
 // How Claude Code selects appropriate agent
 const selectAgent = (task) => {
-  if (task.jobSeries.includes("1560") || task.skills.includes("Machine Learning")) {
+  if (task.skills.includes("Machine Learning") || task.type === "ml_model") {
     return "data-scientist";
-  } else if (task.jobSeries.includes("1530") || task.skills.includes("Statistics")) {
+  } else if (task.skills.includes("Statistics") || task.type === "data_analysis") {
     return "statistician";
-  } else if (task.type === "database") {
+  } else if (task.type === "database" || task.skills.includes("SQL")) {
     return "database-admin";
   } // ... etc
 };
@@ -116,18 +116,18 @@ const selectAgent = (task) => {
 
 ## 🎯 Federal Specialization
 
-### Comprehensive Federal Coverage
-- **All Major Job Series**: 1560, 1530, 2210, 0334, 0343, and related series
-- **Complete Compliance**: Merit hiring, federal application requirements
-- **Market Intelligence**: OPM locality pay, federal career pathways
-- **Quality Assurance**: Federal standards validation and best practice guidance
+### Comprehensive Development Coverage
+- **All Major Tech Stacks**: Python, JavaScript/TypeScript, SQL, DevOps tools
+- **Complete Architecture**: Microservices, APIs, databases, cloud infrastructure
+- **Development Intelligence**: Best practices, design patterns, performance optimization
+- **Quality Assurance**: Code review, testing strategies, security best practices
 
-### Agency-Specific Expertise
-Each agent includes guidance for relevant federal agencies:
-- **Technical Roles**: DOD, NASA, HHS, Treasury, USDA
-- **Compliance**: All agencies with merit hiring requirements  
-- **Analytics**: BLS, Census, SSA, VA, IRS
-- **Infrastructure**: GSA, DHS, DOI, EPA
+### Technology-Specific Expertise
+Each agent includes deep knowledge for relevant tech domains:
+- **Technical Roles**: Full-stack development, data engineering, ML/AI
+- **Architecture**: System design, scalability, security patterns  
+- **Analytics**: Data pipelines, visualization, business intelligence
+- **Infrastructure**: Cloud platforms, containerization, monitoring
 
 ---
 

@@ -15,7 +15,7 @@ from dataclasses import dataclass
 
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
-from langgraph.checkpoint.sqlite import SqliteSaver
+from langgraph.checkpoint.base import Checkpoint
 from langgraph.prebuilt import ToolNode
 from langchain_core.messages import HumanMessage, AIMessage, BaseMessage
 from langchain_core.tools import Tool

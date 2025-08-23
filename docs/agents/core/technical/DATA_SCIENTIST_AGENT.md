@@ -1,103 +1,106 @@
-# Data Scientist Agent - Fed Job Advisor MCP Agent
+# Data Scientist Agent - MCP Development Agent
 
-**Agent Type**: Role-Based Technical Agent  
-**Domain**: Federal Data Scientist Career Analysis (Series 1560)  
+**Agent Type**: Technical Development Agent  
+**Domain**: Data Science and ML/AI Development  
 **Endpoint**: `http://localhost:8001/agents/data-scientist/analyze`  
 **Status**: Active  
 
-*Mastery-level federal data scientist career guidance with comprehensive OPM 1560 series expertise*
+*Mastery-level data science and machine learning development guidance with comprehensive technical expertise*
 
 ---
 
 ## 🎯 Agent Overview
 
 ### Primary Function
-Provides comprehensive federal data scientist career analysis with mastery-level expertise in OPM 1560 series requirements, including skill assessment, job matching, career pathway planning, security clearance guidance, and federal compliance for Data Scientist positions across all federal agencies.
+Provides comprehensive data science and ML/AI development guidance with mastery-level expertise in Python, R, machine learning frameworks, data pipelines, model deployment, and best practices for building scalable data science solutions.
 
-### Federal Expertise Mastery
-- **Primary Job Series**: 1560 (Data Scientist) - Comprehensive mastery of all grade levels
-- **Related Series**: 1529 (Mathematical Statistician), 0343 (Management and Program Analysis), 1550 (Computer Science), 2210 (IT Specialist)
-- **Domain Knowledge**: Complete OPM qualification standards, federal competency frameworks, agency-specific requirements, security clearance considerations
-- **Compliance Requirements**: Merit hiring principles, federal data governance, scientific integrity policies, security clearance adjudication factors
+### Technical Expertise Mastery
+- **Primary Technologies**: Python, R, TensorFlow, PyTorch, scikit-learn, pandas, NumPy
+- **ML/AI Frameworks**: Deep learning, NLP, computer vision, reinforcement learning
+- **Data Engineering**: Apache Spark, Airflow, Kafka, ETL pipelines, data lakes
+- **Cloud Platforms**: AWS SageMaker, Azure ML, Google Cloud AI Platform
 
-### External Service Domain Mastery
-- **OPM Standards**: Complete knowledge of 1560 series qualification requirements GS-11 through GS-15
-- **Federal Competencies**: Core data science competencies for federal service
-- **Agency Specializations**: DOD, HHS, Treasury, NASA, CIA, NSA, and intelligence community requirements
-- **Security Framework**: Comprehensive understanding of clearance requirements from Confidential to TS/SCI
-
----
-
-## 🏛️ OPM 1560 Series Mastery
-
-### Basic Entry Requirements (Qualification Standards)
-#### Education Requirements
-- **Primary**: Bachelor's degree in mathematics, statistics, computer science, data science, or directly related field
-- **Alternative**: 30 semester hours of equivalent coursework plus additional education/experience
-- **Advanced Positions**: Master's or PhD preferred for GS-13+ positions
-- **Specialized Coursework**: Statistics (15+ semester hours), mathematics, computer science fundamentals
-
-#### Individual Occupational Requirements
-- **Core Definition**: "Apply advanced quantitative, computer science, mathematical, and statistical skills to interpret extremely large and unstructured data sets"
-- **Primary Functions**: Gathering, analyzing, designing, and constructing new processes for modeling, interpreting, and reporting quantitative information
-- **Distinguishing Factors**: Different from Data Analysts, Data Architects, and Data Engineers - requires advanced statistical and mathematical modeling skills
-
-### Grade Level Progression Standards
-
-#### GS-11 Entry Level
-- **Experience**: 1 year equivalent to GS-9 level
-- **Responsibilities**: Basic data analysis, simple modeling, supervised projects
-- **Skills Required**: Fundamental programming (Python/R), basic statistics, data visualization
-- **Education Substitute**: Master's degree can substitute for specialized experience
-- **Typical Roles**: Junior Data Scientist, Data Analyst II
-
-#### GS-12 Developmental
-- **Experience**: 1 year equivalent to GS-11 level
-- **Responsibilities**: Independent project execution, intermediate modeling, technical guidance
-- **Skills Required**: Advanced programming, statistical modeling, database management
-- **Leadership**: Beginning supervisory or team lead capabilities
-- **Typical Roles**: Data Scientist, Senior Data Analyst
-
-#### GS-13 Journey Level
-- **Experience**: 1 year equivalent to GS-12 level
-- **Responsibilities**: Complex project leadership, advanced modeling, cross-functional collaboration
-- **Skills Required**: Machine learning, AI techniques, advanced statistics, project management
-- **Specialization**: Domain expertise in agency-specific areas
-- **Typical Roles**: Senior Data Scientist, Lead Data Scientist
-
-#### GS-14 Senior Expert
-- **Experience**: 1 year equivalent to GS-13 level
-- **Responsibilities**: Strategic planning, program management, technical consultation
-- **Skills Required**: Advanced AI/ML, research methodology, policy influence
-- **Leadership**: Significant supervisory responsibilities
-- **Typical Roles**: Principal Data Scientist, Data Science Manager
-
-#### GS-15 Subject Matter Expert
-- **Experience**: 1 year equivalent to GS-13 level (note: can skip GS-14)
-- **Responsibilities**: Agency-wide strategy, executive consultation, policy development
-- **Skills Required**: Strategic planning, executive communication, advanced research
-- **Scope**: National security, policy-level impact
-- **Typical Roles**: Chief Data Scientist, Senior Executive Service candidate
+### Development Domain Mastery
+- **Architecture Patterns**: Microservices, event-driven, serverless ML deployment
+- **Best Practices**: Code review, testing, CI/CD for ML, model versioning
+- **Performance**: Model optimization, distributed computing, GPU acceleration
+- **Production**: Model monitoring, A/B testing, drift detection, explainability
 
 ---
 
-## 🏢 Agency-Specific Mastery
+## 🏛️ Data Science Technical Mastery
 
-### Department of Defense (DOD)
-#### Security Requirements
-- **Clearance Levels**: Secret (minimum) to TS/SCI for sensitive positions
-- **DCSA Adjudication**: Standard DOD security clearance process (6-18 months)
-- **Polygraph**: Required for special access programs
-- **Citizenship**: US citizenship mandatory
+### Core Technical Requirements
+#### Programming Languages
+- **Primary**: Python (NumPy, pandas, scikit-learn, TensorFlow, PyTorch)
+- **Statistical**: R (tidyverse, caret, ggplot2)
+- **Supporting**: SQL, Scala, Julia, MATLAB
+- **Specialized**: C++ for performance-critical components
 
-#### Technical Specializations
-- **Intelligence Analysis**: Signals intelligence, geospatial analysis, threat assessment
-- **Cybersecurity**: Network analysis, threat detection, vulnerability assessment
-- **Operations Research**: Military logistics, resource optimization, tactical analysis
-- **Acquisition**: Defense contractor analysis, cost modeling, performance metrics
+#### Machine Learning Expertise
+- **Supervised Learning**: Classification, regression, ensemble methods
+- **Unsupervised Learning**: Clustering, dimensionality reduction, anomaly detection
+- **Deep Learning**: CNNs, RNNs, transformers, GANs
 
-#### Key Competencies
-- **Programming**: Python, R, SQL, Java, C++, MATLAB
+### Development Skill Levels
+
+#### Junior Developer
+- **Experience**: 0-2 years in data science/ML
+- **Responsibilities**: Basic data analysis, simple models, supervised development
+- **Skills Required**: Python/R fundamentals, basic statistics, data visualization
+- **Projects**: Data cleaning, exploratory analysis, basic predictive models
+- **Focus Areas**: Learning best practices, code quality, version control
+
+#### Mid-Level Developer
+- **Experience**: 2-5 years in data science/ML
+- **Responsibilities**: Independent feature development, model building, code reviews
+- **Skills Required**: Advanced ML algorithms, data pipeline development, API integration
+- **Projects**: End-to-end ML pipelines, A/B testing, production deployment
+- **Focus Areas**: Performance optimization, scalability, testing
+
+#### Senior Developer
+- **Experience**: 5-8 years in data science/ML
+- **Responsibilities**: Architecture design, technical leadership, mentoring
+- **Skills Required**: Distributed computing, advanced optimization, system design
+- **Projects**: Platform development, ML infrastructure, cross-team initiatives
+- **Focus Areas**: Best practices, team productivity, technical strategy
+
+#### Principal/Staff Engineer
+- **Experience**: 8+ years in data science/ML
+- **Responsibilities**: Technical strategy, architecture decisions, innovation
+- **Skills Required**: Deep expertise across stack, research capabilities, business acumen
+- **Projects**: Company-wide initiatives, new technology adoption, R&D
+- **Focus Areas**: Technical vision, organizational impact, thought leadership
+
+#### Technical Lead/Architect
+- **Experience**: 10+ years with leadership experience
+- **Responsibilities**: Team leadership, architectural governance, strategic planning
+- **Skills Required**: Full-stack expertise, people management, strategic thinking
+- **Projects**: Multi-team coordination, platform evolution, innovation labs
+- **Focus Areas**: Team growth, technical excellence, business alignment
+
+---
+
+## 🏢 Technology Stack Mastery
+
+### Python Ecosystem
+#### Core Libraries
+- **Data Manipulation**: pandas, NumPy, Dask for distributed computing
+- **Machine Learning**: scikit-learn, XGBoost, LightGBM, CatBoost
+- **Deep Learning**: TensorFlow, PyTorch, Keras, JAX
+- **Visualization**: Matplotlib, Seaborn, Plotly, Bokeh
+
+#### Development Tools
+- **Environment Management**: conda, virtualenv, poetry
+- **Version Control**: Git, GitHub/GitLab workflows
+- **Testing**: pytest, unittest, hypothesis for property-based testing
+- **Documentation**: Sphinx, MkDocs, Jupyter notebooks
+
+#### Production Deployment
+- **API Frameworks**: FastAPI, Flask, Django REST
+- **Containerization**: Docker, Kubernetes
+- **Model Serving**: TensorFlow Serving, TorchServe, MLflow
+- **Monitoring**: Prometheus, Grafana, Datadog
 - **Platforms**: AWS GovCloud, Azure Government, on-premise secure systems
 - **Methodologies**: Machine learning for defense applications, classified data handling
 - **Regulations**: DFARS compliance, NIST frameworks, DoD data governance

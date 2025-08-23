@@ -2,15 +2,15 @@
 
 ## AI-Powered Career Guidance with gptFree/LangChain
 
-A sophisticated multi-agent system leveraging local LLMs (gptFree/Ollama) and LangChain to provide federal job application assistance while maintaining 100% compliance with Merit Hiring requirements.
+A sophisticated multi-agent system leveraging local LLMs (gptFree/Ollama) and LangChain to provide AI-powered development assistance and architectural guidance for building robust applications.
 
 ## 🎯 Overview
 
 This system provides specialized AI agents for:
-- **Role-specific guidance** (Data Scientist, Statistician, DBA, DevOps, etc.)
-- **Merit Hiring compliance** (essay guidance without writing)
-- **Application analysis** (resume optimization, skill matching)
-- **Backend automation** (job collection, analytics)
+- **Development assistance** (Data Science, ML/AI, Database, DevOps, etc.)
+- **Code review and optimization** (best practices, performance, security)
+- **Architecture guidance** (system design, scalability, patterns)
+- **Automation support** (CI/CD, testing, deployment)
 
 ### Key Features
 - 🚀 **Cost-effective**: Uses local gptFree model (90% cost reduction)
@@ -145,28 +145,31 @@ async def analyze_profile():
 
 ## 🤖 Available Agents
 
-### Role-Based Agents
+### Technical Development Agents
 
-#### Data Scientist (Series 1560)
-- Skill matching for data science positions
-- Project relevance analysis
-- Technical depth assessment
-- Publication evaluation
+#### Data Scientist
+- Python, R, ML/AI development guidance
+- Model architecture and optimization
+- Data pipeline design and implementation
+- Production ML deployment strategies
 
-#### Statistician (Series 1530)
-- Statistical methodology evaluation
-- Survey design experience
-- Research publication analysis
+#### Statistician
+- Statistical analysis implementation
+- Data visualization best practices
+- A/B testing and experimentation
+- Research methodology and validation
 
-#### Database Administrator (Series 2210/0334)
-- Database platform matching
-- Security clearance guidance
-- Performance tuning assessment
+#### Database Administrator
+- Database design and normalization
+- Query optimization and indexing strategies
+- Performance tuning and monitoring
+- Data migration and backup strategies
 
-#### DevOps Engineer (Series 2210)
-- CI/CD pipeline analysis
-- Container/cloud experience
-- Infrastructure automation skills
+#### DevOps Engineer
+- CI/CD pipeline implementation
+- Container orchestration and deployment
+- Infrastructure as code (IaC)
+- Monitoring and observability
 
 ### Compliance Agents
 
@@ -268,22 +271,22 @@ python main.py 2>&1 | jq '.'
 | `API_PORT` | API server port | `8001` |
 | `ENABLE_MERIT_COMPLIANCE` | Enable Merit Hiring checks | `true` |
 
-## 🤝 Integration with Fed Job Advisor
+## 🤝 Integration with Applications
 
-This agent system integrates with the main Fed Job Advisor application:
+This agent system can be integrated with any application needing development assistance:
 
 ```python
-# In Fed Job Advisor backend
+# Example integration
 import httpx
 
-async def get_career_guidance(user_data):
+async def get_development_guidance(task_data):
     async with httpx.AsyncClient() as client:
         response = await client.post(
             "http://localhost:8001/agents/analyze",
             json={
-                "role": "data_scientist",
-                "user_id": user_data["id"],
-                "data": user_data
+                "role": "data_scientist",  # or "devops", "database_admin", etc.
+                "user_id": task_data["session_id"],
+                "data": task_data
             }
         )
         return response.json()
@@ -336,4 +339,4 @@ MIT License - See LICENSE file for details
 
 ---
 
-**Built with ❤️ for federal job seekers**
+**Built with ❤️ for developers and technical teams**

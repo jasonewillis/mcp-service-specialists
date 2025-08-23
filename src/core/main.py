@@ -178,8 +178,7 @@ async def startup_event():
         AgentRoles.DATA_SCIENTIST,
         DataScientistAgent,
         metadata={
-            "series": ["1560"],
-            "description": "Data scientist position specialist",
+            "description": "Data science and ML/AI development specialist",
             "tools": ["skill_matcher", "project_analyzer", "technical_depth_checker"]
         }
     )
@@ -188,8 +187,7 @@ async def startup_event():
         AgentRoles.STATISTICIAN,
         StatisticianAgent,
         metadata={
-            "series": ["1530"],
-            "description": "Statistician position specialist",
+            "description": "Statistical analysis and data visualization specialist",
             "tools": ["methodology_checker", "survey_analyzer", "software_validator"]
         }
     )
@@ -198,8 +196,7 @@ async def startup_event():
         AgentRoles.DATABASE_ADMIN,
         DatabaseAdminAgent,
         metadata={
-            "series": ["2210", "0334"],
-            "description": "Database administrator specialist",
+            "description": "Database architecture and optimization specialist",
             "tools": ["platform_analyzer", "security_checker", "performance_evaluator"]
         }
     )
@@ -208,8 +205,7 @@ async def startup_event():
         AgentRoles.DEVOPS,
         DevOpsEngineerAgent,
         metadata={
-            "series": ["2210"],
-            "description": "DevOps engineer specialist",
+            "description": "DevOps and infrastructure automation specialist",
             "tools": ["cicd_analyzer", "container_checker", "cloud_evaluator"]
         }
     )
@@ -218,8 +214,7 @@ async def startup_event():
         AgentRoles.IT_SPECIALIST,
         ITSpecialistAgent,
         metadata={
-            "series": ["2210"],
-            "description": "General IT specialist",
+            "description": "Systems administration and network specialist",
             "tools": ["specialty_matcher", "systems_analyzer", "network_checker"]
         }
     )

@@ -79,3 +79,7 @@ temp/
 sk_test_*
 pk_test_*
 docs/external_services/platforms/stripe/
+
+# macOS system files
+.DS_Store
+**/.DS_Store
