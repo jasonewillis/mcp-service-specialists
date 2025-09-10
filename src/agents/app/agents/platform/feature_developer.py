@@ -10,7 +10,7 @@ from typing import Dict, Any, List, Optional
 from langchain.tools import Tool
 import structlog
 
-from agents.app.agents.base import FederalJobAgent, AgentConfig, AgentResponse
+from ..base import FederalJobAgent, AgentConfig, AgentResponse
 
 logger = structlog.get_logger()
 

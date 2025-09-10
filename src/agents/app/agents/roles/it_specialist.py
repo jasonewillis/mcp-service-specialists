@@ -178,7 +178,7 @@ from langchain.tools import Tool
 import json
 import re
 
-from agents.app.agents.base import FederalJobAgent, AgentResponse
+from ..base import FederalJobAgent, AgentResponse
 
 
 class ITSpecialistAgent(FederalJobAgent):

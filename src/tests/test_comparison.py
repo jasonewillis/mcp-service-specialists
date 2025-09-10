@@ -8,7 +8,7 @@ import asyncio
 import json
 import time
 from datetime import datetime
-from agents.app.agents.base import AgentConfig, FederalJobAgent
+from ..base import AgentConfig, FederalJobAgent
 from agents.app.agents.roles.data_scientist import DataScientistAgent  # Original broken agent
 from agents.app.agents.roles.data_scientist_fixed import create_fixed_data_scientist_agent  # Fixed agent
 

@@ -22,7 +22,7 @@ from enum import Enum
 from dataclasses import dataclass, asdict
 import asyncio
 import re
-from langgraph.graph import END, interrupt
+from langgraph.graph import END
 
 logger = logging.getLogger(__name__)
 

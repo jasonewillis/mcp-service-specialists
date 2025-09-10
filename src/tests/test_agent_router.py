@@ -5,7 +5,7 @@ Test the AgentRouter - intelligent task routing for Fed Job Advisor
 
 import json
 from agents.app.agents.roles.agent_router import AgentRouter
-from agents.app.agents.base import AgentConfig
+from ..base import AgentConfig
 
 def test_agent_router():
     """Test the AgentRouter functionality"""

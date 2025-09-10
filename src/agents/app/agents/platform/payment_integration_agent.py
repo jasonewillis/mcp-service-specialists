@@ -19,7 +19,7 @@ import stripe
 import json
 from sqlalchemy import text
 
-from agents.app.agents.base import FederalJobAgent, AgentConfig, AgentResponse
+from ..base import FederalJobAgent, AgentConfig, AgentResponse
 
 logger = structlog.get_logger()
 

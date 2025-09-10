@@ -10,7 +10,7 @@ import asyncio
 import json
 from datetime import datetime
 
-from agents.app.agents.base import AgentConfig
+from ..base import AgentConfig
 from agents.app.agents.platform.payment_integration_agent import PaymentIntegrationAgent
 
 

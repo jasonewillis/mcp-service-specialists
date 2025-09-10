@@ -228,7 +228,7 @@ import json
 import re
 from datetime import datetime, timedelta
 
-from agents.app.agents.base import FederalJobAgent, AgentResponse
+from ..base import FederalJobAgent, AgentResponse
 
 
 class AnalyticsIntelligenceAgent(FederalJobAgent):

@@ -13,7 +13,7 @@ from enum import Enum
 import structlog
 from langchain.tools import Tool
 
-from agents.app.agents.base import FederalJobAgent, AgentConfig
+from ..base import FederalJobAgent, AgentConfig
 
 logger = structlog.get_logger()
 

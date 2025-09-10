@@ -24,11 +24,11 @@ from langchain_core.messages import HumanMessage, AIMessage
 from langchain_core.runnables import RunnableConfig
 
 # Import platform agents
-from agents.app.agents.base import FederalJobAgent, AgentConfig, AgentResponse
-from agents.app.agents.platform.feature_developer import FeatureDeveloper
-from agents.app.agents.platform.payment_integration_agent import PaymentIntegrationAgent  
-from agents.app.agents.platform.security_authentication_agent import SecurityAuthenticationAgent
-from agents.app.agents.platform.monitoring_analytics_agent import MonitoringAnalyticsAgent
+from ...agents.base import FederalJobAgent, AgentConfig, AgentResponse
+from ...agents.platform.feature_developer import FeatureDeveloperAgent
+from ...agents.platform.payment_integration_agent import PaymentIntegrationAgent  
+from ...agents.platform.security_authentication_agent import SecurityAuthenticationAgent
+from ...agents.platform.monitoring_analytics_agent import MonitoringAnalyticsAgent
 
 logger = logging.getLogger(__name__)
 
@@ -161,7 +161,7 @@ class PlatformDevelopmentGraph:
         """Initialize all platform development agents"""
         
         try:
-            self.agents["feature_developer"] = FeatureDeveloper(AgentConfig(
+            self.agents["feature_developer"] = FeatureDeveloperAgent(AgentConfig(
                 role="feature_developer",
                 user_id="system", 
                 model="gptFREE"

@@ -11,7 +11,7 @@ import structlog
 import json
 import re
 
-from agents.app.agents.base import FederalJobAgent, AgentConfig, AgentResponse
+from ..base import FederalJobAgent, AgentConfig, AgentResponse
 
 logger = structlog.get_logger()
 

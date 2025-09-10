@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.checkpoint.base import Checkpoint
+from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.prebuilt import ToolNode
 from langchain_core.messages import HumanMessage, AIMessage, BaseMessage
 from langchain_core.tools import Tool
@@ -25,18 +26,18 @@ import sqlite3
 from pathlib import Path
 
 # Import existing agents
-from agents.app.agents.base import FederalJobAgent, AgentConfig, AgentResponse
-from agents.app.agents.roles.agent_router import AgentRouter
+from ..agents.base import FederalJobAgent, AgentConfig, AgentResponse
+from ..agents.roles.agent_router import AgentRouter
 
 # Import subgraphs
-from agents.app.orchestrator.subgraphs import UserFacingGraph, PlatformDevelopmentGraph
-from agents.app.orchestrator.subgraphs import UserQueryType, DevelopmentPhase, FeatureType
+from .subgraphs import UserFacingGraph, PlatformDevelopmentGraph
+from .subgraphs import UserQueryType, DevelopmentPhase, FeatureType
 
 # Import compliance gates
-from agents.app.orchestrator.compliance import get_compliance_gates, ComplianceLevel, ViolationType
+from .compliance import get_compliance_gates, ComplianceLevel, ViolationType
 
 # Import debugging tools
-from agents.app.orchestrator.debugging import (
+from .debugging import (
     TimeTravel, DebugLevel, CheckpointEvent, 
     create_time_travel_debugger, debug_session
 )

@@ -8,7 +8,7 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from agents.app.agents.roles.agent_router import AgentRouter
-from agents.app.agents.base import AgentConfig
+from ..base import AgentConfig
 
 # Create a minimal router for testing
 class SimpleRouter:

@@ -5,7 +5,7 @@ Agent Factory for creating specialized agents
 from typing import Dict, Type, Optional
 import structlog
 
-from agents.app.agents.base import FederalJobAgent, AgentConfig
+from .base import FederalJobAgent, AgentConfig
 
 # Import role-based agents (to be created)
 # from agents.app.agents.roles.data_scientist import DataScientistAgent
@@ -172,6 +172,11 @@ class AgentRoles:
     # Composite agents
     CAREER_ADVISOR = "career_advisor"
     APPLICATION_ASSISTANT = "application_assistant"
+    
+    # General-purpose agents
+    GENERAL_PURPOSE = "general_purpose"
+    RESEARCHER = "researcher"
+    UX_DESIGNER = "ux_designer"
 
 
 def initialize_agents():

@@ -11,7 +11,7 @@ import os
 # Add the project root to Python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from agents.app.agents.base import AgentConfig
+from ..base import AgentConfig
 from agents.app.agents.platform.frontend_ux_agent import FrontendUXAgent
 from agents.app.agents.platform.backend_api_agent import BackendAPIAgent
 

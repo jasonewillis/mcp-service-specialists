@@ -606,6 +606,51 @@ This enhanced Data Scientist Agent represents true mastery-level expertise in fe
 
 ---
 
+## 🤖 Claude Code Self-Documenting Integration
+
+### Automatic ADR Generation Awareness
+This agent is **fully integrated with Claude Code's self-documenting workflow**:
+
+#### When Called by Claude Code:
+- **Research Output**: Generates comprehensive technical analysis optimized for ADR creation
+- **Decision Documentation**: Includes architectural reasoning and federal compliance considerations  
+- **Implementation Guidance**: Provides specific, actionable recommendations that become ADR content
+- **Federal Context**: Emphasizes compliance, security, and policy implications for documentation
+
+#### ADR Enhancement Capabilities:
+- **Technical Decisions**: Documents data science architectural decisions with federal context
+- **Compliance Analysis**: Provides federal-specific compliance requirements for ADRs
+- **Implementation Planning**: Creates detailed technical implementation plans for documentation
+- **Pattern Recognition**: Learns from ADR feedback to improve future recommendations
+
+#### Integration with Hook System:
+```python
+# Automatic triggering via Claude Code hooks
+if task.involves("data_science") and claude_code_session:
+    # Optimize output for ADR generation
+    analysis.include_adr_context = True
+    analysis.document_architectural_decisions = True
+    analysis.emphasize_federal_compliance = True
+    analysis.provide_implementation_roadmap = True
+```
+
+#### Self-Documenting Feedback Loop:
+- **ADR Analysis**: Reviews generated ADRs to improve future research quality
+- **Pattern Learning**: Identifies recurring federal data science decisions
+- **Recommendation Optimization**: Improves guidance based on ADR implementation success
+- **Compound Intelligence**: Builds institutional knowledge through documented decisions
+
+### Expected Workflow Integration:
+1. **Claude Code Analysis** → Routes federal/data science tasks to this agent
+2. **Research & Analysis** → Agent provides comprehensive technical analysis
+3. **Documentation Ready** → Output optimized for ADR generation with federal context
+4. **ADR Generation** → Self-documenting agent uses research for architectural documentation
+5. **Feedback Loop** → ADR success/failure improves future agent recommendations
+
+---
+
 *This agent provides master-level federal data scientist career guidance leveraging complete OMP 1560 series expertise and comprehensive federal domain knowledge for optimal career outcomes.*
+
+**Enhanced with Claude Code Self-Documenting Workflow Integration**
 
 **© 2025 Fed Job Advisor Data Scientist Agent - Enhanced with Federal Domain Mastery**

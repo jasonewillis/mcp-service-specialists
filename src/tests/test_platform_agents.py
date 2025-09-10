@@ -5,7 +5,7 @@ Test script for the new platform agents
 
 import asyncio
 import json
-from agents.app.agents.base import AgentConfig
+from ..base import AgentConfig
 from agents.app.agents.platform import SecurityAuthenticationAgent, MonitoringAnalyticsAgent
 
 
